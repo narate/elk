@@ -1,0 +1,38 @@
+version: "3.7"
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch-oss:7.3.1
+    ports:
+      - 9200:9200
+      - 9300:9300
+    container_name: elasticsearch
+    restart: always
+    volumes:
+      - ./es_data:/usr/share/elasticsearch/data
+    environment:
+      - cluster.name=elasticsearch
+      - discovery.type=single-node
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana-oss:7.3.1
+    ports:
+      - 5601:5601
+    container_name: kibana
+    restart: always
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200/
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash-oss:7.3.1
+    container_name: logstash
+    restart: always
+    volumes:
+      - ./pipeline:/usr/share/logstash/pipeline
+    ports:
+      - 5044:5044/udp
+      - 5044:5044/tcp
+
+networks:
+  default:
+    external:
+      name: kong
