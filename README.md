@@ -6,6 +6,8 @@
 ## Deploy on Docker
 
 ```
+mkdir -p es_data
+chown 1000.1000 es_data
 docker-compose up -d
 ```
 
